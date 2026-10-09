@@ -203,7 +203,6 @@ class PlayerViewModel @Inject constructor(
     private val connectivityStateHolder: ConnectivityStateHolder,
     private val sleepTimerStateHolder: SleepTimerStateHolder,
     private val searchStateHolder: SearchStateHolder,
-    private val aiStateHolder: AiStateHolder,
     private val libraryStateHolder: LibraryStateHolder,
     private val folderNavigationStateHolder: FolderNavigationStateHolder,
     private val libraryTabsStateHolder: LibraryTabsStateHolder,
@@ -437,12 +436,12 @@ class PlayerViewModel @Inject constructor(
         _isMiniPlayerDismissing.value = dismissing
     }
 
-    // AI Ecosystem: States delegated to AiStateHolder for centralized management
-    val showAiPlaylistSheet: StateFlow<Boolean> = aiStateHolder.showAiPlaylistSheet
-    val isGeneratingAiPlaylist: StateFlow<Boolean> = aiStateHolder.isGeneratingAiPlaylist
-    val aiSuccess: StateFlow<Boolean> = aiStateHolder.aiSuccess
-    val aiStatus: StateFlow<String?> = aiStateHolder.aiStatus
-    val aiError: StateFlow<String?> = aiStateHolder.aiError
+    // AI Ecosystem (Disabled)
+    val showAiPlaylistSheet: StateFlow<Boolean> = MutableStateFlow(false).asStateFlow()
+    val isGeneratingAiPlaylist: StateFlow<Boolean> = MutableStateFlow(false).asStateFlow()
+    val aiSuccess: StateFlow<Boolean> = MutableStateFlow(false).asStateFlow()
+    val aiStatus: StateFlow<String?> = MutableStateFlow<String?>(null).asStateFlow()
+    val aiError: StateFlow<String?> = MutableStateFlow<String?>(null).asStateFlow()
 
     private val _selectedSongForInfo = MutableStateFlow<Song?>(null)
     val selectedSongForInfo: StateFlow<Song?> = _selectedSongForInfo.asStateFlow()
@@ -1773,42 +1772,6 @@ class PlayerViewModel @Inject constructor(
             }
         }
 
-        // Initialize AiStateHolder
-        aiStateHolder.initialize(
-            scope = viewModelScope,
-            allSongsProvider = { musicRepository.getAllSongsOnce() },
-            favoriteSongIdsProvider = { favoriteSongIds.value },
-            toastEmitter = { msg -> viewModelScope.launch { _toastEvents.emit(msg) } },
-            playSongsCallback = { songs, startSong, queueName -> playSongs(songs, startSong, queueName) },
-            openPlayerSheetCallback = { _isSheetVisible.value = true }
-        )
-
-        // Collect AiStateHolder flows for playlist generation state
-        viewModelScope.launch {
-            combine(
-                aiStateHolder.showAiPlaylistSheet,
-                aiStateHolder.isGeneratingAiPlaylist,
-                aiStateHolder.aiStatus,
-                aiStateHolder.aiError,
-            ) { show, generating, status, error ->
-                AiUiSnapshot(
-                    showAiPlaylistSheet = show,
-                    isGeneratingAiPlaylist = generating,
-                    aiStatus = status,
-                    aiError = error
-                )
-            }.collect { snapshot ->
-                _playerUiState.update {
-                    it.copy(
-                        showAiPlaylistSheet = snapshot.showAiPlaylistSheet,
-                        isGeneratingAiPlaylist = snapshot.isGeneratingAiPlaylist,
-                        aiStatus = snapshot.aiStatus,
-                        aiError = snapshot.aiError
-                    )
-                }
-            }
-        }
-
         // Initialize LibraryStateHolder
         libraryStateHolder.initialize(viewModelScope)
 
@@ -2578,45 +2541,20 @@ class PlayerViewModel @Inject constructor(
         searchStateHolder.clearSearchHistory()
     }
 
-    // --- AI Playlist Generation ---
+    // --- AI Playlist Generation (Disabled) ---
 
-    // --- AI Playlist Generation ---
-
-    fun showAiPlaylistSheet() {
-        aiStateHolder.showAiPlaylistSheet()
-    }
-
-    fun dismissAiPlaylistSheet() {
-        aiStateHolder.dismissAiPlaylistSheet()
-    }
-
-    fun clearAiPlaylistError() {
-        aiStateHolder.clearAiPlaylistError()
-    }
-
+    fun showAiPlaylistSheet() {}
+    fun dismissAiPlaylistSheet() {}
+    fun clearAiPlaylistError() {}
     fun generateAiPlaylist(
         prompt: String,
         minLength: Int,
         maxLength: Int,
         saveAsPlaylist: Boolean = false,
         playlistName: String? = null
-    ) {
-        aiStateHolder.generateAiPlaylist(
-            prompt = prompt,
-            minLength = minLength,
-            maxLength = maxLength,
-            saveAsPlaylist = saveAsPlaylist,
-            playlistName = playlistName
-        )
-    }
-
-    fun regenerateDailyMixWithPrompt(prompt: String) {
-        aiStateHolder.regenerateDailyMixWithPrompt(prompt)
-    }
-
-    fun retryLastPlaylistGeneration() {
-        aiStateHolder.retryLastPlaylistGeneration()
-    }
+    ) {}
+    fun regenerateDailyMixWithPrompt(prompt: String) {}
+    fun retryLastPlaylistGeneration() {}
 
     fun clearQueueExceptCurrent() {
         mediaController?.let { controller ->
@@ -2671,7 +2609,6 @@ class PlayerViewModel @Inject constructor(
         castTransferStateHolder.onCleared()
         castStateHolder.onCleared()
         searchStateHolder.onCleared()
-        aiStateHolder.onCleared()
         libraryStateHolder.onCleared()
         sleepTimerStateHolder.onCleared()
         connectivityStateHolder.onCleared()
@@ -2960,18 +2897,7 @@ class PlayerViewModel @Inject constructor(
         lyricsStateHolder.importLyricsFromFile(songId, validatedImport, currentSong)
     }
 
-    fun translateLyricsViaAi() {
-        val currentSong = stablePlayerState.value.currentSong ?: return
-        lyricsStateHolder.translateLyricsViaAi(
-            currentSong = currentSong,
-            lyricsObj = stablePlayerState.value.lyrics,
-            cb = LyricsTranslationCallbacks(
-                translate = { rawLyrics -> aiStateHolder.translateLyrics(rawLyrics) },
-                getString = { resId -> context.getString(resId) },
-                getErrorString = { detail -> context.getString(R.string.ai_state_error_generic, detail) }
-            )
-        )
-    }
+    fun translateLyricsViaAi() {}
 
     /**
      * Resetea el estado de la búsqueda de letras a Idle.

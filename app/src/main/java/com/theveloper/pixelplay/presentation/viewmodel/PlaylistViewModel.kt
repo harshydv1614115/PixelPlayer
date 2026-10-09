@@ -33,7 +33,6 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
 import com.theveloper.pixelplay.data.preferences.TelegramTopicDisplayMode
-import com.theveloper.pixelplay.data.ai.AiPlaylistGenerator
 import com.theveloper.pixelplay.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -73,7 +72,6 @@ class PlaylistViewModel @Inject constructor(
     private val playlistPreferencesRepository: PlaylistPreferencesRepository,
     private val musicRepository: MusicRepository,
     private val dailyMixManager: DailyMixManager,
-    private val aiPlaylistGenerator: AiPlaylistGenerator,
     private val m3uManager: M3uManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -927,50 +925,7 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
-    fun generateAiPlaylist(prompt: String, minLength: Int = 10, maxLength: Int = 50) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isAiGenerating = true, aiGenerationError = null) }
-
-            try {
-                val allSongs = withContext(Dispatchers.IO) {
-                    musicRepository.getAllSongsOnce()
-                }
-
-                // Call AiPlaylistGenerator
-                val result = aiPlaylistGenerator.generate(
-                    userPrompt = prompt,
-                    allSongs = allSongs,
-                    minLength = minLength,
-                    maxLength = maxLength
-                )
-
-                result.onSuccess { selectedSongs ->
-                    // Create Playlist
-                    val playlistName = "AI: $prompt".take(50)
-
-                    playlistPreferencesRepository.createPlaylist(
-                        name = playlistName,
-                        songIds = selectedSongs.map { it.id },
-                        isAiGenerated = true,
-                        source = "AI" // Mark as AI source
-                    )
-
-                    _uiState.update { it.copy(isAiGenerating = false) }
-                    _playlistCreationEvent.emit(true)
-                }.onFailure { e ->
-                    val errorMessage = if (e.message?.contains("API Key") == true) {
-                        context.getString(R.string.playlist_view_model_ai_gemini_key_required)
-                    } else {
-                        e.message ?: context.getString(R.string.common_error_unknown)
-                    }
-                    _uiState.update { it.copy(isAiGenerating = false, aiGenerationError = errorMessage) }
-                }
-
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isAiGenerating = false, aiGenerationError = e.message) }
-            }
-        }
-    }
+    fun generateAiPlaylist(prompt: String, minLength: Int = 10, maxLength: Int = 50) {}
 
     fun clearAiError() {
         _uiState.update { it.copy(aiGenerationError = null) }

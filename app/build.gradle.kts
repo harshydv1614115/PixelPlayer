@@ -314,7 +314,6 @@ dependencies {
 
     // Identity & Background
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.play.services.wearable)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
@@ -325,7 +324,6 @@ dependencies {
 
     // UI Utilities & Extra
     implementation(libs.timber)
-    implementation(libs.generativeai)
     implementation(libs.smooth.corner.rect.android.compose)
     implementation(libs.reorderables)
     implementation(libs.codeview)

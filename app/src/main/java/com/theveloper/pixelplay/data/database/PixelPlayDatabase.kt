@@ -32,9 +32,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         NavidromePlaylistEntity::class,
         TelegramTopicEntity::class,
         JellyfinSongEntity::class,
-        JellyfinPlaylistEntity::class,
-        AiCacheEntity::class,
-        AiUsageEntity::class
+        JellyfinPlaylistEntity::class
     ],
     version = 42,
     exportSchema = true
@@ -54,8 +52,6 @@ abstract class PixelPlayDatabase : RoomDatabase() {
     abstract fun qqmusicDao(): QqMusicDao
     abstract fun navidromeDao(): NavidromeDao
     abstract fun jellyfinDao(): JellyfinDao
-    abstract fun aiCacheDao(): AiCacheDao
-    abstract fun aiUsageDao(): AiUsageDao
 
     companion object {
         // Gap-bridging no-op migrations for missing version ranges.

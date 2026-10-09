@@ -77,10 +77,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import com.theveloper.pixelplay.data.preferences.ThemePreference
 import com.theveloper.pixelplay.data.service.auto.AutoMediaBrowseTree
-import com.theveloper.pixelplay.data.service.wear.buildWearThemePalette
-import com.theveloper.pixelplay.data.service.wear.WearStatePublisher
 import com.theveloper.pixelplay.presentation.viewmodel.ColorSchemePair
-import com.theveloper.pixelplay.shared.WearIntents
 import com.theveloper.pixelplay.utils.ArtworkTransportSanitizer
 import com.theveloper.pixelplay.utils.MediaItemBuilder
 import com.theveloper.pixelplay.data.navidrome.NavidromeRepository
@@ -160,8 +157,6 @@ class MusicService : MediaLibraryService() {
     @Inject
     lateinit var autoMediaBrowseTree: AutoMediaBrowseTree
     @Inject
-    lateinit var wearStatePublisher: WearStatePublisher
-    @Inject
     lateinit var replayGainManager: com.theveloper.pixelplay.data.media.ReplayGainManager
     @Inject
     lateinit var navidromeRepository: NavidromeRepository
@@ -211,16 +206,12 @@ class MusicService : MediaLibraryService() {
             requestWidgetUpdate = { force -> widgetUpdateManager.requestFullUpdate(force) },
         )
     }
-    // Glance widget + Wear OS update pipeline, extracted to a standalone manager.
-    // State assembly (buildPlayerInfo / resolveCurrentMediaIdForWear) stays here and
-    // is supplied as callbacks; the manager owns debounce, diffing and rendering.
+    // Glance widget update pipeline, extracted to a standalone manager.
     private val widgetUpdateManager by lazy {
         WidgetUpdateManager(
             context = applicationContext,
             scope = serviceScope,
-            wearStatePublisher = wearStatePublisher,
             buildPlayerInfo = { buildPlayerInfo() },
-            resolveCurrentMediaIdForWear = { resolveCurrentMediaIdForWear() },
         )
     }
     private var playbackSnapshotPersistJob: Job? = null
@@ -1502,7 +1493,6 @@ class MusicService : MediaLibraryService() {
         castSyncCoordinator.stop()
         unregisterHeadsetReconnectMonitor()
         unregisterSystemVolumeObserver()
-        wearStatePublisher.clearState()
         replayGainProcessor.cancel()
 
         engine.removePlayerSwapListener(playerSwapListener)
@@ -2062,7 +2052,7 @@ class MusicService : MediaLibraryService() {
                 darkPrevNextIcon = it.dark.primary.toArgb()
             )
         }
-        val wearThemePalette = schemePair?.let { buildWearThemePalette(it.dark) }
+        val wearThemePalette: com.theveloper.pixelplay.shared.WearThemePalette? = null
 
         val isFavorite = isSongFavorite(mediaId)
         val lyrics = resolveWearLyrics(mediaId)
