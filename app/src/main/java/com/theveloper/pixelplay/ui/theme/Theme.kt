@@ -106,28 +106,31 @@ val LightColorScheme = lightColorScheme(
     onError = PixelPlayWhite
 )
 
+val LocalPixelPlayThemePreset = staticCompositionLocalOf { "default" }
+
 @Composable
 fun PixelPlayTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     colorSchemePairOverride: ColorSchemePair? = null,
+    themePresetId: String = "default",
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
+    val preset = com.theveloper.pixelplay.ui.theme.presets.core.PixelPlayerThemePreset.fromId(themePresetId)
+    val presetScheme = if (darkTheme) preset.darkColorScheme() else preset.lightColorScheme()
+
     val finalColorScheme = when {
-        colorSchemePairOverride == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            // Tema dinámico del sistema como prioridad si no hay override
+        presetScheme != null -> presetScheme
+        colorSchemePairOverride != null -> {
+            if (darkTheme) colorSchemePairOverride.dark else colorSchemePairOverride.light
+        }
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             try {
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             } catch (e: Exception) {
-                // Fallback a los defaults si dynamic colors falla (raro, pero posible en algunos dispositivos)
                 if (darkTheme) DarkColorScheme else LightColorScheme
             }
         }
-        colorSchemePairOverride != null -> {
-            // Usar el esquema del álbum si se proporciona
-            if (darkTheme) colorSchemePairOverride.dark else colorSchemePairOverride.light
-        }
-        // Fallback final a los defaults si no hay override ni dynamic colors aplicables
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -137,12 +140,34 @@ fun PixelPlayTheme(
         navigationColor = finalColorScheme.background
     )
 
-    CompositionLocalProvider(LocalPixelPlayDarkTheme provides darkTheme) {
+    CompositionLocalProvider(
+        LocalPixelPlayDarkTheme provides darkTheme,
+        LocalPixelPlayThemePreset provides themePresetId,
+    ) {
         MaterialTheme(
             colorScheme = finalColorScheme,
             typography = Typography,
             shapes = Shapes,
-            content = content
-        )
+        ) {
+            val wallpaperRes = preset.wallpaperRes
+            if (wallpaperRes != null) {
+                androidx.compose.material3.Surface(
+                    modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                    color = androidx.compose.ui.graphics.Color.Transparent,
+                ) {
+                    androidx.compose.foundation.layout.Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = wallpaperRes),
+                            contentDescription = null,
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                        )
+                        content()
+                    }
+                }
+            } else {
+                content()
+            }
+        }
     }
 }

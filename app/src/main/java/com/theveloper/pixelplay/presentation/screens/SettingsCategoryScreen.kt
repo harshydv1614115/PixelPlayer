@@ -543,6 +543,19 @@ fun SettingsCategoryScreen(
                                     leadingIcon = { Icon(Icons.Outlined.Language, null, tint = MaterialTheme.colorScheme.secondary) }
                                 )
                                 ThemeSelectorItem(
+                                    label = "Visual Theme Preset",
+                                    description = "Select aesthetic theme: Graduation, Slate Glass, AMOLED Black, or Dynamic",
+                                    options = mapOf(
+                                        "default" to "Dynamic Material You",
+                                        "graduation" to "Graduation ( YE )",
+                                        "slate_glass" to "Slate Frosted Glass",
+                                        "amoled_black" to "True AMOLED Black"
+                                    ),
+                                    selectedKey = uiState.selectedThemePreset,
+                                    onSelectionChanged = { settingsViewModel.setSelectedThemePreset(it) },
+                                    leadingIcon = { Icon(Icons.Outlined.Style, null, tint = MaterialTheme.colorScheme.secondary) }
+                                )
+                                ThemeSelectorItem(
                                     label = stringResource(R.string.settings_app_theme_title),
                                     description = stringResource(R.string.settings_app_theme_subtitle),
                                     options = mapOf(
