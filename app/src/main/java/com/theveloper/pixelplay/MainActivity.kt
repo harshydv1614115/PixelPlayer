@@ -243,6 +243,7 @@ class MainActivity : ComponentActivity() {
             val systemDarkTheme = isSystemInDarkTheme()
             val appThemeMode by themePreferencesRepository.appThemeModeFlow.collectAsStateWithLifecycle(initialValue = AppThemeMode.FOLLOW_SYSTEM)
             val selectedThemePreset by themePreferencesRepository.selectedThemePresetFlow.collectAsStateWithLifecycle(initialValue = "default")
+            val liquidGlassEffect by themePreferencesRepository.liquidGlassEffectFlow.collectAsStateWithLifecycle(initialValue = false)
             val showScrollbar by userPreferencesRepository.showScrollbarFlow.collectAsStateWithLifecycle(initialValue = true)
             val useDarkTheme = when (appThemeMode) {
                 AppThemeMode.DARK -> true
@@ -292,7 +293,8 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(LocalShowScrollbar provides showScrollbar) {
                 PixelPlayTheme(
                     darkTheme = useDarkTheme,
-                    themePresetId = selectedThemePreset
+                    themePresetId = selectedThemePreset,
+                    liquidGlassEffect = liquidGlassEffect
                 ) {
                     var contentVisible by remember { mutableStateOf(false) }
                     val contentAlpha by animateFloatAsState(

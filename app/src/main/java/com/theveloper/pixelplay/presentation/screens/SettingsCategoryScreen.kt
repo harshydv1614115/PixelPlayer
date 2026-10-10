@@ -549,6 +549,13 @@ fun SettingsCategoryScreen(
                                     onSelectionChanged = { settingsViewModel.setSelectedThemePreset(it) },
                                     leadingIcon = { Icon(Icons.Outlined.Style, null, tint = MaterialTheme.colorScheme.secondary) }
                                 )
+                                SwitchSettingItem(
+                                    title = "Liquid Glass Water Overlay",
+                                    subtitle = "Apply crystal-clear translucent water caustics and glass refraction over any theme",
+                                    checked = uiState.liquidGlassEffect,
+                                    onCheckedChange = { settingsViewModel.setLiquidGlassEffect(it) },
+                                    leadingIcon = { Icon(Icons.Outlined.WaterDrop, null, tint = MaterialTheme.colorScheme.secondary) }
+                                )
                                 ThemeSelectorItem(
                                     label = stringResource(R.string.settings_app_theme_title),
                                     description = stringResource(R.string.settings_app_theme_subtitle),

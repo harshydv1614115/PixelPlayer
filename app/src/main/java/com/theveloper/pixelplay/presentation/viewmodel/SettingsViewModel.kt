@@ -75,6 +75,7 @@ data class SettingsUiState(
     val autoScanLrcFiles: Boolean = false,
     val blockedDirectories: Set<String> = emptySet(),
     val selectedThemePreset: String = "default",
+    val liquidGlassEffect: Boolean = false,
     val appRebrandDialogShown: Boolean = false,
     val beta05CleanInstallDisclaimerDismissed: Boolean? = null,
     val fullPlayerLoadingTweaks: FullPlayerLoadingTweaks = FullPlayerLoadingTweaks(),
@@ -131,6 +132,7 @@ private sealed interface SettingsUiUpdate {
         val appRebrandDialogShown: Boolean,
         val appThemeMode: String,
         val selectedThemePreset: String,
+        val liquidGlassEffect: Boolean,
         val playerThemePreference: String,
         val albumArtPaletteStyle: AlbumArtPaletteStyle,
         val albumArtColorAccuracy: Int,
@@ -254,6 +256,7 @@ class SettingsViewModel @Inject constructor(
                 userPreferencesRepository.appRebrandDialogShownFlow,
                 themePreferencesRepository.appThemeModeFlow,
                 themePreferencesRepository.selectedThemePresetFlow,
+                themePreferencesRepository.liquidGlassEffectFlow,
                 themePreferencesRepository.playerThemePreferenceFlow,
                 themePreferencesRepository.albumArtPaletteStyleFlow,
                 themePreferencesRepository.albumArtColorAccuracyFlow,
@@ -270,17 +273,18 @@ class SettingsViewModel @Inject constructor(
                     appRebrandDialogShown = values[0] as Boolean,
                     appThemeMode = values[1] as String,
                     selectedThemePreset = values[2] as String,
-                    playerThemePreference = values[3] as String,
-                    albumArtPaletteStyle = values[4] as AlbumArtPaletteStyle,
-                    albumArtColorAccuracy = values[5] as Int,
-                    mockGenresEnabled = values[6] as Boolean,
-                    navBarCornerRadius = values[7] as Int,
-                    navBarStyle = values[8] as String,
-                    navBarCompactMode = values[9] as Boolean,
-                    libraryNavigationMode = values[10] as String,
-                    carouselStyle = values[11] as String,
-                    launchTab = values[12] as String,
-                    showPlayerFileInfo = values[13] as Boolean
+                    liquidGlassEffect = values[3] as Boolean,
+                    playerThemePreference = values[4] as String,
+                    albumArtPaletteStyle = values[5] as AlbumArtPaletteStyle,
+                    albumArtColorAccuracy = values[6] as Int,
+                    mockGenresEnabled = values[7] as Boolean,
+                    navBarCornerRadius = values[8] as Int,
+                    navBarStyle = values[9] as String,
+                    navBarCompactMode = values[10] as Boolean,
+                    libraryNavigationMode = values[11] as String,
+                    carouselStyle = values[12] as String,
+                    launchTab = values[13] as String,
+                    showPlayerFileInfo = values[14] as Boolean
                 )
             }.collect { update ->
                 _uiState.update { state ->
@@ -288,6 +292,7 @@ class SettingsViewModel @Inject constructor(
                         appRebrandDialogShown = update.appRebrandDialogShown,
                         appThemeMode = update.appThemeMode,
                         selectedThemePreset = update.selectedThemePreset,
+                        liquidGlassEffect = update.liquidGlassEffect,
                         playerThemePreference = update.playerThemePreference,
                         albumArtPaletteStyle = update.albumArtPaletteStyle,
                         albumArtColorAccuracy = update.albumArtColorAccuracy,
@@ -564,6 +569,12 @@ class SettingsViewModel @Inject constructor(
     fun setSelectedThemePreset(presetId: String) {
         viewModelScope.launch {
             themePreferencesRepository.setSelectedThemePreset(presetId)
+        }
+    }
+
+    fun setLiquidGlassEffect(enabled: Boolean) {
+        viewModelScope.launch {
+            themePreferencesRepository.setLiquidGlassEffect(enabled)
         }
     }
 

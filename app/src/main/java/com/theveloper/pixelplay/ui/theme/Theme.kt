@@ -109,19 +109,21 @@ val LightColorScheme = lightColorScheme(
 )
 
 val LocalPixelPlayThemePreset = staticCompositionLocalOf { "default" }
+val LocalPixelPlayLiquidGlass = staticCompositionLocalOf { false }
 
 @Composable
 fun PixelPlayTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     colorSchemePairOverride: ColorSchemePair? = null,
     themePresetId: String = "default",
+    liquidGlassEffect: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val preset = com.theveloper.pixelplay.ui.theme.presets.core.PixelPlayerThemePreset.fromId(themePresetId)
     val presetScheme = if (darkTheme) preset.darkColorScheme() else preset.lightColorScheme()
 
-    val finalColorScheme = when {
+    var baseScheme = when {
         presetScheme != null -> presetScheme
         colorSchemePairOverride != null -> {
             if (darkTheme) colorSchemePairOverride.dark else colorSchemePairOverride.light
@@ -137,6 +139,21 @@ fun PixelPlayTheme(
         else -> LightColorScheme
     }
 
+    // When Liquid Glass overlay is active, adjust surfaces for ultra-clear translucent refraction
+    val finalColorScheme = if (liquidGlassEffect) {
+        baseScheme.copy(
+            surface = Color.Transparent,
+            surfaceVariant = Color(0x22FFFFFF),
+            surfaceContainer = Color(0x28FFFFFF),
+            surfaceContainerHigh = Color(0x35FFFFFF),
+            surfaceContainerLow = Color(0x15FFFFFF),
+            outline = Color(0x50FFFFFF),
+            outlineVariant = Color(0x3080EEF5)
+        )
+    } else {
+        baseScheme
+    }
+
     PixelPlayStatusBarStyle(
         color = finalColorScheme.background,
         navigationColor = finalColorScheme.background
@@ -145,13 +162,14 @@ fun PixelPlayTheme(
     CompositionLocalProvider(
         LocalPixelPlayDarkTheme provides darkTheme,
         LocalPixelPlayThemePreset provides themePresetId,
+        LocalPixelPlayLiquidGlass provides liquidGlassEffect,
     ) {
         MaterialTheme(
             colorScheme = finalColorScheme,
             typography = Typography,
             shapes = Shapes,
         ) {
-            val wallpaperRes = preset.wallpaperRes
+            val wallpaperRes = preset.wallpaperRes ?: if (liquidGlassEffect) com.theveloper.pixelplay.R.drawable.bg_crystal_water else null
             if (wallpaperRes != null) {
                 androidx.compose.material3.Surface(
                     modifier = androidx.compose.ui.Modifier.fillMaxSize(),
@@ -169,6 +187,20 @@ fun PixelPlayTheme(
                                     renderEffect = null
                                 },
                         )
+                        // If liquid glass is on and there is already a wallpaper (e.g. Graduation or Slate Glass), blend the crystal water refraction on top!
+                        if (liquidGlassEffect && preset.wallpaperRes != null) {
+                            androidx.compose.foundation.Image(
+                                painter = androidx.compose.ui.res.painterResource(id = com.theveloper.pixelplay.R.drawable.bg_crystal_water),
+                                contentDescription = null,
+                                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                alpha = 0.65f,
+                                modifier = androidx.compose.ui.Modifier
+                                    .fillMaxSize()
+                                    .androidx.compose.ui.graphics.graphicsLayer {
+                                        renderEffect = null
+                                    },
+                            )
+                        }
                         content()
                     }
                 }

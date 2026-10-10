@@ -20,10 +20,15 @@ class ThemePreferencesRepository @Inject constructor(
         val ALBUM_ART_COLOR_ACCURACY = intPreferencesKey("album_art_color_accuracy_v1")
         val APP_THEME_MODE = stringPreferencesKey("app_theme_mode")
         val THEME_PRESET = stringPreferencesKey("selected_theme_preset_v1")
+        val LIQUID_GLASS_EFFECT = androidx.datastore.preferences.core.booleanPreferencesKey("liquid_glass_overlay_v1")
     }
 
     val selectedThemePresetFlow: Flow<String> = dataStore.data.map { preferences ->
         preferences[Keys.THEME_PRESET] ?: "default"
+    }
+
+    val liquidGlassEffectFlow: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[Keys.LIQUID_GLASS_EFFECT] ?: false
     }
 
     val appThemeModeFlow: Flow<String> = dataStore.data.map { preferences ->
@@ -41,6 +46,11 @@ class ThemePreferencesRepository @Inject constructor(
     val albumArtColorAccuracyFlow: Flow<Int> = dataStore.data.map { preferences ->
         AlbumArtColorAccuracy.clamp(preferences[Keys.ALBUM_ART_COLOR_ACCURACY] ?: AlbumArtColorAccuracy.DEFAULT)
     }
+
+    suspend fun setLiquidGlassEffect(enabled: Boolean) =
+        dataStore.edit { preferences ->
+            preferences[Keys.LIQUID_GLASS_EFFECT] = enabled
+        }
 
     suspend fun setSelectedThemePreset(presetId: String) =
         dataStore.edit { preferences ->
