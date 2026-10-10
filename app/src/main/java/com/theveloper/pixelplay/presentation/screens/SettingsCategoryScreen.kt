@@ -554,7 +554,7 @@ fun SettingsCategoryScreen(
                                     subtitle = "Apply crystal-clear translucent water caustics and glass refraction over any theme",
                                     checked = uiState.liquidGlassEffect,
                                     onCheckedChange = { settingsViewModel.setLiquidGlassEffect(it) },
-                                    leadingIcon = { Icon(Icons.Outlined.Opacity, null, tint = MaterialTheme.colorScheme.secondary) }
+                                    leadingIcon = { Icon(Icons.Rounded.BlurOn, null, tint = MaterialTheme.colorScheme.secondary) }
                                 )
                                 ThemeSelectorItem(
                                     label = stringResource(R.string.settings_app_theme_title),
