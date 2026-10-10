@@ -139,9 +139,11 @@ fun PixelPlayTheme(
         else -> LightColorScheme
     }
 
-    // When Liquid Glass overlay is active, adjust surfaces for ultra-clear translucent refraction
+    // When Liquid Glass overlay or wallpaper preset is active, ensure background and surfaces are translucent
+    val hasWallpaper = preset.wallpaperRes != null || liquidGlassEffect
     val finalColorScheme = if (liquidGlassEffect) {
         baseScheme.copy(
+            background = Color.Transparent,
             surface = Color.Transparent,
             surfaceVariant = Color(0x22FFFFFF),
             surfaceContainer = Color(0x28FFFFFF),
@@ -150,13 +152,18 @@ fun PixelPlayTheme(
             outline = Color(0x50FFFFFF),
             outlineVariant = Color(0x3080EEF5)
         )
+    } else if (hasWallpaper) {
+        baseScheme.copy(
+            background = Color.Transparent,
+            surface = Color.Transparent,
+        )
     } else {
         baseScheme
     }
 
     PixelPlayStatusBarStyle(
-        color = finalColorScheme.background,
-        navigationColor = finalColorScheme.background
+        color = Color.Transparent,
+        navigationColor = Color.Transparent
     )
 
     CompositionLocalProvider(

@@ -538,9 +538,10 @@ fun SettingsCategoryScreen(
                                 )
                                 ThemeSelectorItem(
                                     label = "Visual Theme Preset",
-                                    description = "Select aesthetic theme: Graduation, Slate Glass, AMOLED Black, or Dynamic",
+                                    description = "Select aesthetic theme: Crystal Clear Water, Graduation, Slate Glass, AMOLED Black, or Dynamic",
                                     options = mapOf(
                                         "default" to "Dynamic Material You",
+                                        "crystal_water" to "Crystal Clear Water",
                                         "graduation" to "Graduation ( YE )",
                                         "slate_glass" to "Slate Frosted Glass",
                                         "amoled_black" to "True AMOLED Black"
