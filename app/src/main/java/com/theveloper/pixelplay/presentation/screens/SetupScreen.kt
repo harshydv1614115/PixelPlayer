@@ -700,7 +700,7 @@ fun WelcomePage() {
             androidx.compose.foundation.Image(
                 painter = painterResource(id = R.drawable.welcome_logo),
                 contentDescription = null,
-                contentScale = ContentScale.Fit,
+                contentScale = androidx.compose.ui.layout.ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)

@@ -180,12 +180,7 @@ fun PixelPlayTheme(
                             painter = androidx.compose.ui.res.painterResource(id = wallpaperRes),
                             contentDescription = null,
                             contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                            modifier = androidx.compose.ui.Modifier
-                                .fillMaxSize()
-                                .androidx.compose.ui.graphics.graphicsLayer {
-                                    // Hardware-layer caching so GPU doesn't redraw the wallpaper during list/player animations
-                                    renderEffect = null
-                                },
+                            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
                         )
                         // If liquid glass is on and there is already a wallpaper (e.g. Graduation or Slate Glass), blend the crystal water refraction on top!
                         if (liquidGlassEffect && preset.wallpaperRes != null) {
@@ -194,11 +189,7 @@ fun PixelPlayTheme(
                                 contentDescription = null,
                                 contentScale = androidx.compose.ui.layout.ContentScale.Crop,
                                 alpha = 0.65f,
-                                modifier = androidx.compose.ui.Modifier
-                                    .fillMaxSize()
-                                    .androidx.compose.ui.graphics.graphicsLayer {
-                                        renderEffect = null
-                                    },
+                                modifier = androidx.compose.ui.Modifier.fillMaxSize(),
                             )
                         }
                         content()
