@@ -561,6 +561,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setSelectedThemePreset(presetId: String) {
+        viewModelScope.launch {
+            themePreferencesRepository.setSelectedThemePreset(presetId)
+        }
+    }
+
     fun setAppThemeMode(mode: String) {
         viewModelScope.launch {
             themePreferencesRepository.setAppThemeMode(mode)

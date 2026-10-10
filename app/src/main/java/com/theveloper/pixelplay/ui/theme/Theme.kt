@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.theveloper.pixelplay.presentation.viewmodel.ColorSchemePair
 import androidx.core.graphics.ColorUtils
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxSize
 
 val LocalPixelPlayDarkTheme = staticCompositionLocalOf { false }
 val LocalShowScrollbar = staticCompositionLocalOf { true }

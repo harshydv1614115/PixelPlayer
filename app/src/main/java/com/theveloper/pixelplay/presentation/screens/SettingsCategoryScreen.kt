@@ -207,12 +207,7 @@ fun SettingsCategoryScreen(
     val toastStatsRegenerationStarted = stringResource(R.string.settings_toast_stats_regeneration_started)
     val backupFileNameFormat = stringResource(R.string.settings_backup_file_name_format)
     
-    // State Collection (Duplicated from SettingsScreen for now to ensure functionality)
     val uiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
-    val currentAiApiKey by settingsViewModel.currentAiApiKey.collectAsStateWithLifecycle()
-    val currentAiModel by settingsViewModel.currentAiModel.collectAsStateWithLifecycle()
-    val currentAiSystemPrompt by settingsViewModel.currentAiSystemPrompt.collectAsStateWithLifecycle()
-    val aiProvider by settingsViewModel.aiProvider.collectAsStateWithLifecycle()
     val currentPath by settingsViewModel.currentPath.collectAsStateWithLifecycle()
     val directoryChildren by settingsViewModel.currentDirectoryChildren.collectAsStateWithLifecycle()
     val availableStorages by settingsViewModel.availableStorages.collectAsStateWithLifecycle()
