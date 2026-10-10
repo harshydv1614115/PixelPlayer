@@ -53,7 +53,6 @@ import com.theveloper.pixelplay.data.preferences.CarouselStyle
 import com.theveloper.pixelplay.data.preferences.LibraryNavigationMode
 import com.theveloper.pixelplay.data.preferences.NavBarStyle
 import com.theveloper.pixelplay.data.preferences.FullPlayerLoadingTweaks
-import com.theveloper.pixelplay.data.preferences.AiPreferencesRepository
 import com.theveloper.pixelplay.data.preferences.AlbumArtPaletteStyle
 import com.theveloper.pixelplay.data.preferences.ThemePreferencesRepository
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
@@ -185,7 +184,6 @@ class PlayerViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val musicRepository: MusicRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val aiPreferencesRepository: AiPreferencesRepository,
     private val themePreferencesRepository: ThemePreferencesRepository,
     val syncManager: SyncManager, // Inyectar SyncManager
 
@@ -488,60 +486,8 @@ class PlayerViewModel @Inject constructor(
             initialValue = CarouselStyle.NO_PEEK
         )
 
-    val hasActiveAiProviderApiKey: StateFlow<Boolean> = combine(
-        aiPreferencesRepository.aiProvider,
-        aiPreferencesRepository.geminiApiKey,
-        aiPreferencesRepository.deepseekApiKey,
-        aiPreferencesRepository.groqApiKey,
-        aiPreferencesRepository.mistralApiKey,
-        aiPreferencesRepository.nvidiaApiKey,
-        aiPreferencesRepository.kimiApiKey,
-        aiPreferencesRepository.glmApiKey,
-        aiPreferencesRepository.openaiApiKey,
-        aiPreferencesRepository.ollamaApiKey,
-        aiPreferencesRepository.customApiKey,
-        aiPreferencesRepository.openrouterApiKey
-    ) { values ->
-        val provider = values[0]
-        val gemini = values[1]
-        val deepseek = values[2]
-        val groq = values[3]
-        val mistral = values[4]
-        val nvidia = values[5]
-        val kimi = values[6]
-        val glm = values[7]
-        val openai = values[8]
-        val ollama = values[9]
-        val custom = values[10]
-        val openrouter = values[11]
-        when (provider) {
-            "GEMINI" -> gemini.isNotBlank()
-            "DEEPSEEK" -> deepseek.isNotBlank()
-            "GROQ" -> groq.isNotBlank()
-            "MISTRAL" -> mistral.isNotBlank()
-            "NVIDIA" -> nvidia.isNotBlank()
-            "KIMI" -> kimi.isNotBlank()
-            "GLM" -> glm.isNotBlank()
-            "OPENAI" -> openai.isNotBlank()
-            "OPENROUTER" -> openrouter.isNotBlank()
-            "OLLAMA" -> ollama.isNotBlank()
-            "CUSTOM" -> custom.isNotBlank()
-            else -> false
-        }
-    }.distinctUntilChanged()
-        .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = false
-    )
-
-    val hasGeminiApiKey: StateFlow<Boolean> = aiPreferencesRepository.geminiApiKey
-        .map { it.isNotBlank() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
+    val hasActiveAiProviderApiKey: StateFlow<Boolean> = MutableStateFlow(false).asStateFlow()
+    val hasGeminiApiKey: StateFlow<Boolean> = MutableStateFlow(false).asStateFlow()
 
     val fullPlayerLoadingTweaks: StateFlow<FullPlayerLoadingTweaks> = userPreferencesRepository.fullPlayerLoadingTweaksFlow
         .stateIn(

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 42,
-    "identityHash": "e6c4f6c20d810ef8cb2cf2856151cc0f",
+    "identityHash": "c8db6117cd561d71de708df8e5d6fbfb",
     "entities": [
       {
         "tableName": "album_art_themes",
@@ -2649,101 +2649,11 @@
             "id"
           ]
         }
-      },
-      {
-        "tableName": "ai_cache",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`promptHash` TEXT NOT NULL, `responseJson` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`promptHash`))",
-        "fields": [
-          {
-            "fieldPath": "promptHash",
-            "columnName": "promptHash",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "responseJson",
-            "columnName": "responseJson",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "timestamp",
-            "columnName": "timestamp",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "promptHash"
-          ]
-        }
-      },
-      {
-        "tableName": "ai_usage",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `provider` TEXT NOT NULL, `model` TEXT NOT NULL, `promptType` TEXT NOT NULL, `promptTokens` INTEGER NOT NULL, `outputTokens` INTEGER NOT NULL, `thoughtTokens` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "timestamp",
-            "columnName": "timestamp",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "provider",
-            "columnName": "provider",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "model",
-            "columnName": "model",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "promptType",
-            "columnName": "promptType",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "promptTokens",
-            "columnName": "promptTokens",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "outputTokens",
-            "columnName": "outputTokens",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "thoughtTokens",
-            "columnName": "thoughtTokens",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e6c4f6c20d810ef8cb2cf2856151cc0f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c8db6117cd561d71de708df8e5d6fbfb')"
     ]
   }
 }
