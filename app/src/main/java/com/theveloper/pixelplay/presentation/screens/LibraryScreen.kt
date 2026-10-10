@@ -1628,9 +1628,6 @@ fun LibraryScreen(
         }
     )
 
-        }
-    )
-
     if (showSongInfoBottomSheet && selectedSongForInfo != null) {
         val currentSong = selectedSongForInfo
         val isFavorite = remember(currentSong?.id, favoriteIds) { derivedStateOf { currentSong?.let {
