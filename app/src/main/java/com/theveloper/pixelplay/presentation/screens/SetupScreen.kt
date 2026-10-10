@@ -698,58 +698,21 @@ fun WelcomePage() {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        // Placeholder for vector art
+        // Custom logo
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
-                //.background(color = Color.Red)
-                .clip(RoundedCornerShape(20.dp))
-        ){
-            MaterialYouVectorDrawable(
-                modifier = Modifier.fillMaxSize(),
-                drawableResId = R.drawable.welcome_art
-            )
-            SineWaveLine(
+                .height(260.dp)
+                .clip(RoundedCornerShape(20.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            androidx.compose.foundation.Image(
+                painter = painterResource(id = R.drawable.welcome_logo),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .height(32.dp)
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 4.dp),
-                animate = true,
-                color = MaterialTheme.colorScheme.surface,
-                alpha = 0.95f,
-                strokeWidth = 16.dp,
-                amplitude = 4.dp,
-                waves = 7.6f,
-                phase = 0f
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .height(22.dp)
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 4.dp)
-            ){
-
-            }
-            SineWaveLine(
-                modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .height(32.dp)
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 4.dp),
-                animate = true,
-                color = MaterialTheme.colorScheme.primary, //Container.copy(alpha = 0.9f),
-                alpha = 0.95f,
-                strokeWidth = 4.dp,
-                amplitude = 4.dp,
-                waves = 7.6f,
-                phase = 0f
+                    .fillMaxSize()
+                    .padding(8.dp)
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
