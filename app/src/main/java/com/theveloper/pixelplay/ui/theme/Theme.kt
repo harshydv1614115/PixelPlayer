@@ -162,7 +162,12 @@ fun PixelPlayTheme(
                             painter = androidx.compose.ui.res.painterResource(id = wallpaperRes),
                             contentDescription = null,
                             contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                            modifier = androidx.compose.ui.Modifier
+                                .fillMaxSize()
+                                .androidx.compose.ui.graphics.graphicsLayer {
+                                    // Hardware-layer caching so GPU doesn't redraw the wallpaper during list/player animations
+                                    renderEffect = null
+                                },
                         )
                         content()
                     }
