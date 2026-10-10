@@ -235,42 +235,9 @@ fun SongInfoBottomSheet(
         }
     }
 
-    var lastShownWatchTransferError by remember(song.id) { mutableStateOf<String?>(null) }
-    LaunchedEffect(
-        latestSongWatchTransfer?.requestId,
-        latestSongWatchTransfer?.status,
-        latestSongWatchTransfer?.error,
-    ) {
-        val failedTransfer = latestSongWatchTransfer?.takeIf {
-            it.status == com.theveloper.pixelplay.shared.WearTransferProgress.STATUS_FAILED &&
-                    !it.error.isNullOrBlank()
-        } ?: return@LaunchedEffect
-        val errorKey = "${failedTransfer.requestId}:${failedTransfer.error}"
-        if (lastShownWatchTransferError == errorKey) return@LaunchedEffect
-        lastShownWatchTransferError = errorKey
-        Toast.makeText(context, failedTransfer.error, Toast.LENGTH_SHORT).show()
-    }
-
-    val shouldOfferWatchTransfer = remember(
-        canSendToWatch,
-        currentSongTransfer,
-        isPixelPlayWatchAvailable,
-        isSongSavedOnWatch,
-        isWatchAvailabilityResolved,
-    ) {
-        currentSongTransfer == null &&
-                canSendToWatch &&
-                isWatchAvailabilityResolved &&
-                isPixelPlayWatchAvailable &&
-                !isSongSavedOnWatch
-    }
-    val shouldShowWatchTransferLoading = remember(
-        canSendToWatch,
-        isWatchAvailabilityResolved,
-    ) {
-        canSendToWatch &&
-                !isWatchAvailabilityResolved
-    }
+    val isSendingToWatch = false
+    val shouldOfferWatchTransfer = false
+    val shouldShowWatchTransferLoading = false
 
     val evenCornerRadiusElems = 26.dp
 
@@ -1611,6 +1578,7 @@ private fun Row4Actions(
     val weightRingtone = (0.38f + 0.08f * pressFractionRingtone - 0.08f * pressFractionWatch).coerceAtLeast(0.1f)
     val weightWatch = (0.62f + 0.08f * pressFractionWatch - 0.08f * pressFractionRingtone).coerceAtLeast(0.1f)
 
+    // sendToWatch disabled
     val sendToWatchContainerColor by animateColorAsState(
         targetValue = if (isSendingToWatch) {
             MaterialTheme.colorScheme.secondaryContainer
@@ -1677,7 +1645,7 @@ private fun Row4Actions(
                 disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             shape = CircleShape,
-            enabled = shouldOfferWatchTransfer && !isSendingToWatch,
+            enabled = false,
             interactionSource = watchInteractionSource,
             onClick = {
                 if (clickPending) return@FilledTonalButton

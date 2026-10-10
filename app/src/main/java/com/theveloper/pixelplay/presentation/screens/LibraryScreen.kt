@@ -156,7 +156,7 @@ import com.theveloper.pixelplay.presentation.components.MultiSelectionBottomShee
 import com.theveloper.pixelplay.presentation.components.AlbumMultiSelectionOptionSheet
 import com.theveloper.pixelplay.presentation.components.PlaylistMultiSelectionBottomSheet
 import com.theveloper.pixelplay.presentation.components.PlaylistCreationTypeDialog
-import com.theveloper.pixelplay.presentation.components.CreateAiPlaylistDialog
+
 import com.theveloper.pixelplay.presentation.components.subcomps.SelectionActionRow
 import com.theveloper.pixelplay.presentation.components.subcomps.SelectionCountPill
 import com.theveloper.pixelplay.presentation.viewmodel.ColorSchemePair
@@ -717,10 +717,10 @@ fun LibraryScreen(
                                 modifier = Modifier,
                                 title = currentTabTitle,
                                 isExpanded = showTabSwitcherSheet,
-                                showIcon = !isSendingToWatch,
+                                showIcon = true,
                                 iconRes = currentTab.iconRes(),
                                 pageIndex = pagerState.currentPage,
-                                compressForWatchTransfer = isSendingToWatch,
+                                compressForWatchTransfer = false,
                                 onClick = {
                                     showTabSwitcherSheet = true
                                 },
@@ -1628,24 +1628,6 @@ fun LibraryScreen(
         }
     )
 
-    CreateAiPlaylistDialog(
-        visible = showCreateAiPlaylistDialog && hasActiveAiProviderApiKey,
-        isGenerating = isGeneratingAiPlaylist,
-        error = aiError,
-        onDismiss = {
-            showCreateAiPlaylistDialog = false
-            aiGenerationRequestedFromDialog = false
-            playerViewModel.clearAiPlaylistError()
-        },
-        onGenerate = { playlistName, prompt, minLength, maxLength ->
-            aiGenerationRequestedFromDialog = true
-            playerViewModel.generateAiPlaylist(
-                prompt = prompt,
-                minLength = minLength,
-                maxLength = maxLength,
-                saveAsPlaylist = true,
-                playlistName = playlistName
-            )
         }
     )
 

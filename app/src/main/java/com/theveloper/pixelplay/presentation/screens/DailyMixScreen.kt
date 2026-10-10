@@ -73,7 +73,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
 import com.theveloper.pixelplay.R
 import com.theveloper.pixelplay.data.model.Song
-import com.theveloper.pixelplay.presentation.components.AiPlaylistSheet
 import com.theveloper.pixelplay.presentation.components.DailyMixMenu
 import com.theveloper.pixelplay.presentation.components.MiniPlayerHeight
 import com.theveloper.pixelplay.presentation.components.PlaylistBottomSheet
@@ -137,23 +136,7 @@ fun DailyMixScreen(
                 playerViewModel.regenerateDailyMixWithPrompt(prompt)
                 showDailyMixMenu = false
             },
-            isLoading = isGeneratingAiPlaylist
-        )
-    }
-
-    if (showAiSheet) {
-        // AI Integration: Premium Material 3 Expressive sheet for interactive playlist curation
-        AiPlaylistSheet(
-            onDismiss = { playerViewModel.dismissAiPlaylistSheet() },
-            onGenerateClick = { prompt, minLength, maxLength ->
-                // Optimize: Trigger background AI generation and track real-time status
-                playerViewModel.generateAiPlaylist(prompt, minLength, maxLength, saveAsPlaylist = false)
-            },
-            isGenerating = isGeneratingAiPlaylist,
-            isSuccess = aiSuccess,
-            status = aiStatus,
-            error = aiError,
-            onRetry = { playerViewModel.retryLastPlaylistGeneration() }
+            isLoading = false
         )
     }
 
@@ -271,7 +254,7 @@ fun DailyMixScreen(
                     ExpressiveDailyMixHeader(
                         songs = dailyMixSongs,
                         scrollState = lazyListState,
-                        onShowMenu = { playerViewModel.showAiPlaylistSheet() }
+                        onShowMenu = {}
                     )
                 }
 
