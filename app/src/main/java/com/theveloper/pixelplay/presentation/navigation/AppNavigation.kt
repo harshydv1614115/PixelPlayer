@@ -34,7 +34,6 @@ import androidx.navigation.navArgument
 import com.theveloper.pixelplay.data.preferences.LaunchTab
 import com.theveloper.pixelplay.data.preferences.UserPreferencesRepository
 import com.theveloper.pixelplay.presentation.screens.AlbumDetailScreen
-import com.theveloper.pixelplay.presentation.screens.AccountsScreen
 import com.theveloper.pixelplay.presentation.screens.ArtistDetailScreen
 import com.theveloper.pixelplay.presentation.screens.ArtistSettingsScreen
 import com.theveloper.pixelplay.presentation.screens.DailyMixScreen
@@ -214,27 +213,6 @@ fun AppNavigation(
                         playerViewModel = playerViewModel,
                         onNavigationIconClick = {
                             navController.popBackStack()
-                        }
-                    )
-                }
-            }
-            composable(
-                Screen.Accounts.route,
-            ) {
-                ScreenWrapper(navController = navController, playerViewModel = playerViewModel, animatedVisibilityScope = this) {
-                    AccountsScreen(
-                        onBackClick = { navController.popBackStack() },
-                        onOpenNeteaseDashboard = {
-                            navController.navigateSafely(Screen.NeteaseDashboard.route)
-                        },
-                        onOpenQqMusicDashboard = {
-                            navController.navigateSafely(Screen.QqMusicDashboard.route)
-                        },
-                        onOpenNavidromeDashboard = {
-                            navController.navigateSafely(Screen.NavidromeDashboard.route)
-                        },
-                        onOpenJellyfinDashboard = {
-                            navController.navigateSafely(Screen.JellyfinDashboard.route)
                         }
                     )
                 }

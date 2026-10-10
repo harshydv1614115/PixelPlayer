@@ -624,7 +624,6 @@ class MainActivity : ComponentActivity() {
         val routesWithHiddenNavigationBar = remember {
             setOf(
                 Screen.Settings.route,
-                Screen.Accounts.route,
                 Screen.PlaylistDetail.route,
                 Screen.DailyMixScreen.route,
                 Screen.RecentlyPlayed.route,
