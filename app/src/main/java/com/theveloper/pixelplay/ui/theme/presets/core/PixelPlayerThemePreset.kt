@@ -4,6 +4,8 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 import com.theveloper.pixelplay.ui.theme.presets.amoled_black.AmoledBlackDarkColorScheme
 import com.theveloper.pixelplay.ui.theme.presets.amoled_black.AmoledBlackLightColorScheme
+import com.theveloper.pixelplay.ui.theme.presets.crystal_water.CrystalWaterDarkColorScheme
+import com.theveloper.pixelplay.ui.theme.presets.crystal_water.CrystalWaterLightColorScheme
 import com.theveloper.pixelplay.ui.theme.presets.graduation.GraduationDarkColorScheme
 import com.theveloper.pixelplay.ui.theme.presets.graduation.GraduationLightColorScheme
 import com.theveloper.pixelplay.ui.theme.presets.slate_glass.SlateGlassDarkColorScheme
@@ -25,6 +27,15 @@ enum class PixelPlayerThemePreset(
         previewPrimary = Color(0xFF6750A4),
         previewBackground = Color(0xFF141218),
         previewAccent = Color(0xFFD0BCFF),
+    ),
+    CRYSTAL_WATER(
+        id = "crystal_water",
+        title = "Crystal Clear Water",
+        subtitle = "Translucent liquid glass • Prism caustics & reflection",
+        previewPrimary = Color(0xFF5CE1E6),
+        previewBackground = Color(0xFF0B0D11),
+        previewAccent = Color(0xFF80EEF5),
+        wallpaperRes = com.theveloper.pixelplay.R.drawable.bg_crystal_water,
     ),
     GRADUATION(
         id = "graduation",
@@ -55,6 +66,7 @@ enum class PixelPlayerThemePreset(
 
     fun darkColorScheme(): ColorScheme? = when (this) {
         DEFAULT -> null
+        CRYSTAL_WATER -> CrystalWaterDarkColorScheme
         GRADUATION -> GraduationDarkColorScheme
         SLATE_GLASS -> SlateGlassDarkColorScheme
         AMOLED_BLACK -> AmoledBlackDarkColorScheme
@@ -62,6 +74,7 @@ enum class PixelPlayerThemePreset(
 
     fun lightColorScheme(): ColorScheme? = when (this) {
         DEFAULT -> null
+        CRYSTAL_WATER -> CrystalWaterLightColorScheme
         GRADUATION -> GraduationLightColorScheme
         SLATE_GLASS -> SlateGlassLightColorScheme
         AMOLED_BLACK -> AmoledBlackLightColorScheme
